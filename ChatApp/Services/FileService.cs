@@ -1,5 +1,6 @@
 ﻿using ChatApp.Data;
 using ChatApp.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace ChatApp.Services
 {
