@@ -1,25 +1,31 @@
 ﻿using ChatApp.Data;
 using ChatApp.Models;
+using ChatApp.Models.Enum;
+using Microsoft.AspNetCore.Http;
 
 namespace ChatApp.Services
 {
     public class MessageService
     {
         private readonly DataStorage dataStorage = DataStorage.GetDataStorage();
-        private FileService fileService = new FileService();
-        
+       
+
 
         #region input
-        public bool SendMessage(int uid, int groupId, string content)
+        public bool SendMessage(int uid, int groupId, string? content, string? filePath = null, FileType fileType = FileType.Image)
         {
             if (content != null)
             {
-                Message message = new Message();
-                message.Id = GenerateMessageId();
-                message.Content = content;
-                message.CreatedDate = DateTime.Now;
-                message.FromUserId = uid;
-                message.InGroupId = groupId;
+                Message message = new Message()
+                {
+                    Id = GenerateMessageId(),
+                    Content = content,
+                    CreatedDate = DateTime.Now,
+                    Path = filePath,
+                    FileType = fileType,
+                    FromUserId = uid,
+                    InGroupId = groupId,
+                };
                 dataStorage.Messages.Add(message);
                 return true;
             }
@@ -33,7 +39,7 @@ namespace ChatApp.Services
                 dataStorage.Messages.Remove(message);
                 if (message.Path != null)
                 {
-                    fileService.DeleteFileIfExist(message.Path, webRootPath);
+                    DeleteFileIfExist(message.Path, webRootPath);
                 }
                 return true;
             }
@@ -87,5 +93,45 @@ namespace ChatApp.Services
             return id;
         }
         #endregion
+
+        public List<string>? DisplayAllFile(int groupId)
+        {
+            List<Message>? messageList = dataStorage.Messages.GetAll(mess => mess.Path != null && mess.InGroupId == groupId).ToList();
+            List<string>? filePathList = null;
+            if (messageList != null)
+            {
+                filePathList = messageList.Select(message => message.Path).ToList();
+            }
+            return filePathList;
+        }
+
+        public void DeleteFileIfExist(string imageUrl, string webRootPath)
+        {
+            var oldImage = Path.Combine(webRootPath, imageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(oldImage))
+            {
+                System.IO.File.Delete(oldImage);
+            }
+        }
+        public void UploadNewFile(int userId, int groupId, string webRootPath, IFormFileCollection? files)
+        {
+            string fileName_new = Guid.NewGuid().ToString();
+            var uploads = Path.Combine(webRootPath, @"images\menuItems");
+            var extension = Path.GetExtension(files[0].FileName);
+
+            using (var fileStream = new FileStream(Path.Combine(uploads, fileName_new + extension), FileMode.Create))
+            {
+                files[0].CopyTo(fileStream);
+            }
+            Message message = new()
+            {
+                Id = GenerateMessageId(),
+                Path = @"\images\menuItems\" + fileName_new + extension,
+                InGroupId = groupId,
+                FromUserId = userId,
+                CreatedDate = DateTime.Now,
+            };
+            dataStorage.Messages.Add(message);
+        }
     }
 }

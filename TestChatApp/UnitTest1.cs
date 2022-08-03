@@ -7,9 +7,9 @@ namespace ChatAppTest
     public class UnitTest1
     {
         private UserService userService = new UserService();
-        //private MessageService messageService = new MessageService();
+        private MessageService messageService = new MessageService();
         private GroupService groupService = new GroupService();
-        //private FileService fileService = new FileService();
+
 
         [SetUp]
         public void Setup()
@@ -18,7 +18,11 @@ namespace ChatAppTest
             userService.RegisterUser("test2", "@Abc123");
             userService.RegisterUser("test3", "Hs1Ts1");
             userService.RegisterUser("test4", "123456789");
-
+            List<User> users = new List<User>() {
+                userService.GetUser(1),
+                userService.GetUser(2)
+            };
+            groupService.CreatePublicGroup("test", users);
         }
         [Test]
         public void RegisterUser()
@@ -49,74 +53,40 @@ namespace ChatAppTest
             Assert.That(friends, Is.EqualTo(totalFriends));
         }
         [Test]
-        [TestCase("test", 1)]
+        [TestCase("test", 2)]
         public void CreateGroup(string groupName, int expect)
         {
             List<User> users = new List<User>() {
                 userService.GetUser(1),
-                userService.GetUser(2)
+                userService.GetUser(2),
+                userService.GetUser(3)
             };
             groupService.CreatePublicGroup(groupName, users);
             int result = groupService.GetAllGroups().Count;
             Assert.That(result, Is.EqualTo(expect));
         }
+        [Test]
+        public void JoinGroup()
+        {
+            int userId = 0;
+            string inviteCode = groupService.GetPublicGroupById(0).InviteCode;
+            bool result = groupService.JoinPublicGroup(userId, inviteCode);
+            Assert.That(result, Is.True);
+        }
+        [Test]
+        public void SendTextMessage()
+        {
+            bool result = messageService.SendMessage(1, 0, "hello");
+            Assert.That(result, Is.True);
+        }
+        [Test]
+        public void SendFileMessage()
+        {
+            bool result = messageService.SendMessage(1, 0, "hello");
+            Assert.That(result, Is.True);
+        }
 
-        //[Test]
-        //public void FindFriend_Works()
-        //{
-        //    //Arrange
-        //    var name = "Tan";
-        //    var user = new List<User>() { new User { FirstName = "Tran", LastName = "Tan" },
-        //                new User { FirstName = "user1", LastName = "1" },
-        //                new User { FirstName = "user2", LastName = "2" },
-        //                new User { FirstName = "user3", LastName = "3" }};
-        //    //Act
-        //    var findFriend = userService.FindFriend(user, name);
-        //    //Assert
-        //    Assert.That(findFriend, Is.EqualTo(user.FindAll(friend => friend.UserName == name)));
-        //}
-        //[Test]
-        //public void FindFriend_Null()
-        //{
-        //    //Arrange
-        //    var user = new List<User>() { new User { FirstName = "Tran", LastName = "Tan" },
-        //                new User { FirstName = "user1", LastName = "1" },
-        //                new User { FirstName = "user2", LastName = "2" },
-        //                new User { FirstName = "user3", LastName = "3" }};
-        //    //Act
-        //    var findFriend = user == null;
-        //    //Assert
-        //    Assert.That(findFriend, Is.EqualTo(null));
-        //}
-        //[Test]
-        //public void CreateNewUser()
-        //{
-        //    //Arrange
-        //    //Act          
-        //    //Assert
-        //}
-        //[Test]
-        //public void LoginByUsername_WrongUsername()
-        //{
-        //    //Arrange
-        //    var usesrname = "minhtan";
-        //    var password = "minhtan123";
-        //    //Act          
-        //    var Login = userService.LoginByUsername(usesrname, password);
-        //    //Assert
-        //    Assert.That(Login, Is.EqualTo(null));
-        //}
-        //[Test]
-        //public void LoginByUsername_Success()
-        //{
-        //    //Arrange
-        //    var usesrname = "minhtan";
-        //    var password = "minhtan123";
-        //    //Act          
-        //    var Login = userService.LoginByUsername(usesrname, password);
-        //    //Assert
-        //    Assert.That(Login, Is.EqualTo(user.GetFirstOrDefault(user => user.UserName == username)));
-        //}
+
     }
 
 }
