@@ -6,15 +6,17 @@ namespace ChatApp.Services
 {
     public class GroupService
     {
-        private readonly DataStorage dataStorage;
-        private UserService userService;
-        public GroupService(UserService userService)
-        {
-            dataStorage = DataStorage.GetDataStorage();
-            this.userService = userService;
-        }
+        private readonly DataStorage dataStorage = DataStorage.GetDataStorage();
+        private UserService userService = new UserService();
+        
         //For all boolean methods in this, return if action is success
         #region general
+
+        public List<Group> GetAllGroups()
+        {
+            return dataStorage.Groups.GetAll().ToList();
+        }
+
         public List<Group> GetGroupOfUser(User user)
         {
             List<Group> groups = new List<Group>();

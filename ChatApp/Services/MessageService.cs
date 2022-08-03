@@ -6,11 +6,8 @@ namespace ChatApp.Services
     public class MessageService
     {
         private readonly DataStorage dataStorage = DataStorage.GetDataStorage();
-        private FileService fileService;
-        public MessageService(FileService fileService)
-        {
-            this.fileService = fileService;
-        }
+        private FileService fileService = new FileService();
+        
 
         #region input
         public bool SendMessage(int uid, int groupId, string content)

@@ -7,11 +7,8 @@ namespace ChatApp.Services
     public class FileService
     {
         private readonly DataStorage dataStorage = DataStorage.GetDataStorage();
-        private MessageService messageService;
-        public FileService(MessageService messageService)
-        {
-            this.messageService = messageService;
-        }
+        private MessageService messageService = new MessageService();
+        
         public List<string>? DisplayAllFile(int groupId)
         {
             List<Message>? messageList = dataStorage.Messages.GetAll(mess => mess.Path != null && mess.InGroupId == groupId).ToList();
