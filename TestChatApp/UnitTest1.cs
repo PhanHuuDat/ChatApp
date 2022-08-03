@@ -27,7 +27,7 @@ namespace ChatAppTest
             Assert.That(findFriend, Is.EqualTo(user.FindAll(friend => friend.UserName == name)));
         }
         [Test]
-        public void FindFriend_NotNull()
+        public void FindFriend_Null()
         {
             //Arrange
             var user = new List<User>() { new User { FirstName = "Tran", LastName = "Tan" },
@@ -85,12 +85,13 @@ namespace ChatAppTest
     public class MessageServiceTests
     {
         [Test]
-        public void DeleteMessage()
+        public void SendMessage()
         {
             //Arrange
+
             //Act          
             //Assert
-            Assert.That(DeleteMessage, Is.True);
+            Assert.That(SendMessage, Is.True);
         }
     }
 }
