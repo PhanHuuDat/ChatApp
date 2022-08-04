@@ -50,25 +50,25 @@ namespace ChatAppTest
         public void ShowAllFileInGroup()
         {
             Group group = groupService.GetGroupById(2);
-            for (int i = 0; i < 2; i++)
+           /* for (int i = 0; i < 2; i++)
             {
-                messageService.UploadNewFile(1, 3, ");
-            }
-            List<String> fileList = messageService.DisplayAllFile(3);
+                messageService.UploadNewFile(1, 2, "Hello");
+            }*/
+            List<String> fileList = messageService.DisplayAllFile(2);
             Assert.Equals(2, fileList);
         }
         [Test]
-        public void showKLatestMessageGroup()
+        public void ShowKLatestMessageGroup()
         {
             for (int i = 0; i < 2; i++)
             {
                 messageService.SendMessage(1, 0, "Hello");
             }
-            List<Message> messageList = messageService.GetTopLatestMessages(1, 10);
+            List<Message> messageList = messageService.GetTopLatestMessages(1, 3);
             Assert.Equals(messageList, Is.True);
         }
         [Test]
-        public void findMessageByKeywordInUser()
+        public void FindMessageByKeywordInUser()
         {
             for (int i = 0; i < 3; i++)
             {
@@ -82,10 +82,32 @@ namespace ChatAppTest
             {
                 messageService.SendMessage(1, 2, "hello");
             }
-            List<Message> messageList = messageService.FindMessage();
+            List<Message> messageList = messageService.GetMessages(1, 0, "hello2");
             Assert.Equals(3, messageList);
         }
+        [Test]
+        public void ShowAllConversationsInGroup()
+        {
+            User user1 = userService.GetUser(1);
+            for (int i = 0; i < 1; i++)
+            {
+                messageService.SendMessage(1, 0, "Hello");
+            }
+            List<Group> groupList = groupService.GetGroupOfUser(user1);
+            Assert.Equals(1, groupList.Count);
+        }
+        [Test]
+        public void ShowAllConversationUser()
+        {
+            User user2 = userService.GetUser(2);
+            for (int i = 0; i < 1; i++)
+            {
+                messageService.SendMessage(1, 0, "Hello");
+            }
+            List<int> conversation = messageService.GetConversations(user2);
+            Assert.Equals(1, conversation.Count);
 
+        }
 
     }
 
