@@ -49,7 +49,7 @@ namespace ChatAppTest
             Assert.That(friends, Is.EqualTo(totalFriends));
         }
         [Test]
-        public void setAlias()
+        public void SetAlias()
         {
             User user1 = userService.GetUser(1);
             User user2 = userService.GetUser(2);

@@ -54,7 +54,7 @@ namespace ChatAppTest
                 userService.GetUser(3)
             };
             groupService.CreatePublicGroup("Group1", users);
-            Assert.True(groupService.RemoveUserFromGroup(1, 2));
+            Assert.True(groupService.RemoveUserFromGroup(1, 1));
         }
     }
 
