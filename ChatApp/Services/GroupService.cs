@@ -6,15 +6,17 @@ namespace ChatApp.Services
 {
     public class GroupService
     {
-        private readonly DataStorage dataStorage;
-        private UserService userService;
-        public GroupService(UserService userService)
-        {
-            dataStorage = DataStorage.GetDataStorage();
-            this.userService = userService;
-        }
+        private readonly DataStorage dataStorage = DataStorage.GetDataStorage();
+        private UserService userService = new UserService();
+
         //For all boolean methods in this, return if action is success
         #region general
+
+        public List<Group> GetAllGroups()
+        {
+            return dataStorage.Groups.GetAll().ToList();
+        }
+
         public List<Group> GetGroupOfUser(User user)
         {
             List<Group> groups = new List<Group>();
@@ -65,9 +67,11 @@ namespace ChatApp.Services
                 MemberList = members,
                 IsPrivate = false,
             };
-            GenerateInviteCode(group.Id);
 
             dataStorage.Groups.Add(group);
+            GenerateInviteCode(group.Id);
+
+
         }
 
         public bool JoinPublicGroup(int userId, string inviteCode)
@@ -100,6 +104,8 @@ namespace ChatApp.Services
             return true;
 
         }
+
+
 
         public bool AddUserPublic(int userId, int groupId)
         {
@@ -170,31 +176,31 @@ namespace ChatApp.Services
 
         #region ultilities function
 
-        private Group GetGroupById(int groupId)
+        public Group GetGroupById(int groupId)
         {
             var group = dataStorage.Groups.GetFirstOrDefault(g => g.Id == groupId);
             return group;
         }
 
-        private PublicGroup GetPublicGroupById(int groupId)
+        public PublicGroup GetPublicGroupById(int groupId)
         {
             var group = dataStorage.Groups.GetFirstOrDefault(g => g.Id == groupId && !g.IsPrivate);
             return group as PublicGroup;
         }
 
-        private PrivateGroup GetPrivateGroupById(int groupId)
+        public PrivateGroup GetPrivateGroupById(int groupId)
         {
             var group = dataStorage.Groups.GetFirstOrDefault(g => g.Id == groupId && g.IsPrivate);
             return group as PrivateGroup;
         }
 
-        private PublicGroup GetGroupByCode(string inviteCode)
+        public PublicGroup GetGroupByCode(string inviteCode)
         {
             var groups = dataStorage.Groups.GetAll(g => g.IsPrivate == false);
             foreach (var g in groups)
             {
                 var group = g as PublicGroup;
-                if (group.InviteCode.Equals(inviteCode))
+                if (group.InviteCode != null && group.InviteCode.Equals(inviteCode))
                 {
                     return group;
                 }

@@ -52,10 +52,23 @@ namespace ChatApp.Services
             dataStorage.Users.Add(user);
         }
 
+        public void AddFriend(int userId, int friendId)
+        {
+            User user = dataStorage.Users.GetFirstOrDefault(user => user.Id == userId);
+            User friend = dataStorage.Users.GetFirstOrDefault(user => user.Id == friendId);
+            if (!user.FriendList.Contains(friend))
+            {
+                user.FriendList.Add(friend);
+            }           
+        }
+
         #endregion
 
         #region general
-
+        public int GetAll()
+        {
+            return dataStorage.Users.GetAll().Count();
+        }
         public User GetUser(int userId)
         {
             var user = dataStorage.Users.GetFirstOrDefault(u => u.Id == userId);
