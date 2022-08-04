@@ -1,7 +1,4 @@
-
 using ChatApp.Data;
-using System.Security.Cryptography;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using ChatApp.Models;
 using ChatApp.Models.Enum;
 
@@ -76,14 +73,11 @@ namespace ChatApp.Services
             return user;
         }
 
-        public bool SetAlias(User assignor, User Assignee, string context)
+        public bool SetAlias(User assignor, User assignee, string context)
         {
-            if (assignor != null && Assignee != null)
+            if (assignor != null && assignee != null)
             {
-                Alias alias = new Alias();
-                alias.AssignorID = assignor.Id;
-                alias.AssigneeID = Assignee.Id;
-                alias.Context = context;
+                Alias alias = new Alias(assignor.Id, assignee.Id, context);
                 dataStorage.Aliases.Add(alias);
                 return true;
             }

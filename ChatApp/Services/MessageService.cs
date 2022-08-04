@@ -94,6 +94,7 @@ namespace ChatApp.Services
         }
         #endregion
 
+        #region file
         public List<string>? DisplayAllFile(int groupId)
         {
             List<Message>? messageList = dataStorage.Messages.GetAll(mess => mess.Path != null && mess.InGroupId == groupId).ToList();
@@ -133,5 +134,6 @@ namespace ChatApp.Services
             };
             dataStorage.Messages.Add(message);
         }
+        #endregion
     }
 }
