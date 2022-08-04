@@ -4,7 +4,7 @@ using ChatApp.Services;
 
 namespace ChatAppTest
 {
-    public class UnitTest1
+    public class GroupServiceTest
     {
         private UserService userService = new UserService();
         private MessageService messageService = new MessageService();
@@ -23,34 +23,6 @@ namespace ChatAppTest
                 userService.GetUser(2)
             };
             groupService.CreatePublicGroup("test", users);
-        }
-        [Test]
-        public void RegisterUser()
-        {
-            int length = userService.GetAll();
-            userService.RegisterUser("test5", "1234567890");
-            int nextLength = userService.GetAll();
-            Assert.That(length, Is.EqualTo(nextLength - 1));
-        }
-
-        [Test]
-        [TestCase("test1", "123456", LoginStatus.LoginSuccess)]
-        [TestCase("test2", "123456", LoginStatus.WrongPassword)]
-        [TestCase("test5", "123456", LoginStatus.WrongUsername)]
-        public void Login(string username, string password, LoginStatus result)
-        {
-            LoginStatus status = userService.LoginByUsername(username, password);
-            Assert.That(status, Is.EqualTo(result));
-        }
-        [Test]
-        [TestCase(1, 2, 1)]
-        [TestCase(1, 3, 2)]
-        [TestCase(1, 2, 2)]
-        public void FindFriend(int userId, int friendId, int totalFriends)
-        {
-            userService.AddFriend(userId, friendId);
-            int friends = userService.GetUser(userId).FriendList.Count;
-            Assert.That(friends, Is.EqualTo(totalFriends));
         }
         [Test]
         [TestCase("test", 2)]
@@ -74,19 +46,16 @@ namespace ChatAppTest
             Assert.That(result, Is.True);
         }
         [Test]
-        public void SendTextMessage()
+        public void LeaveGroup()
         {
-            bool result = messageService.SendMessage(1, 0, "hello");
-            Assert.That(result, Is.True);
+            List<User> users = new List<User>() {
+                userService.GetUser(1),
+                userService.GetUser(2),
+                userService.GetUser(3)
+            };
+            groupService.CreatePublicGroup("Group1", users);
+            Assert.True(groupService.RemoveUserFromGroup(1, 2));
         }
-        [Test]
-        public void SendFileMessage()
-        {
-            bool result = messageService.SendMessage(1, 0, "hello");
-            Assert.That(result, Is.True);
-        }
-
-
     }
 
 }
