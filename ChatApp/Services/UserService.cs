@@ -71,21 +71,33 @@ namespace ChatApp.Services
         }
         public User GetUser(int userId)
         {
-            var user = dataStorage.Users.GetFirstOrDefault(u => u.Id == userId);
+            var user = dataStorage.Users.GetFirstOrDefault(user => user.Id == userId);
             return user;
         }
 
-        public bool SetAlias(User assignor, User Assignee, string context)
+        public UserStatus ValidateUserExistance(int userId)
         {
-            if (assignor != null && Assignee != null)
+            var result = dataStorage.Users.Contain(user => user.Id == userId);
+            if (result)
             {
-                Alias alias = new Alias();
-                alias.AssignorID = assignor.Id;
-                alias.AssigneeID = Assignee.Id;
-                alias.Context = context;
-                dataStorage.Aliases.Add(alias);
-                return true;
+                return UserStatus.UserFound;
+            } else
+            {
+                return UserStatus.UserNotFound;
             }
+        }
+
+        public bool SetAlias(User assignor, User assignee, string context)
+        {
+            //if (assignor != null && Assignee != null)
+            //{
+            //    Alias alias = new Alias(assignor.Id, assignee.Id, context);
+            //    alias.AssignorID = assignor.Id;
+            //    alias.AssigneeID = Assignee.Id;
+            //    alias.Context = context;
+            //    dataStorage.Aliases.Add(alias);
+            //    return true;
+            //}
             return false;
         }
 

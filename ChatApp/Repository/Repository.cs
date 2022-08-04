@@ -4,24 +4,35 @@ namespace ChatApp.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly List<T> _list;
+        private readonly IList<T> _list;
         public Repository()
         {
             _list = new List<T>();
         }
-        
+
+        public bool Contain(Expression<Func<T, bool>>? filter = null)
+        {
+            IQueryable<T> query = _list.AsQueryable();
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return query.Count() > 0 ? true : false;
+        }
+
         public void Add(T entity)
         {
             _list.Add(entity);
         }
-        
+
         public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
         {
             IQueryable<T> query = _list.AsQueryable();
             if (filter != null)
             {
                 query = query.Where(filter);
-            }         
+            }
             if (orderBy != null)
             {
                 return orderBy(query).ToList();
@@ -29,15 +40,15 @@ namespace ChatApp.Repository
             return query;
         }
 
-        public T GetFirstOrDefault(Expression<Func<T, bool>>? filter = null)
+        public T? GetFirstOrDefault(Expression<Func<T, bool>>? filter = null)
         {
             IQueryable<T> query = _list.AsQueryable();
             if (filter != null)
             {
                 query = query.Where(filter);
             }
-           
-            return query.FirstOrDefault(defaultValue:null);
+
+            return query.FirstOrDefault(defaultValue: null);
         }
 
         public void Remove(T entity)
