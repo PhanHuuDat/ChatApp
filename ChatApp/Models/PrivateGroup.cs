@@ -4,8 +4,9 @@
     {
         private User admin;
 
-        public PrivateGroup(string name, IList<User> memberList, bool isPrivate) : base(name, memberList, isPrivate)
+        public PrivateGroup(User admin, string name, IList<User> memberList, bool isPrivate) : base(name, memberList, isPrivate)
         {
+            this.admin = admin;
         }
 
         public User Admin 

@@ -24,6 +24,7 @@ namespace ChatAppTest
             };
             groupService.CreatePublicGroup("test", users);
         }
+
         [Test]
         [TestCase("test", 2)]
         public void CreateGroup(string groupName, int expect)
@@ -37,6 +38,7 @@ namespace ChatAppTest
             int result = groupService.GetAllGroups().Count;
             Assert.That(result, Is.EqualTo(expect));
         }
+
         [Test]
         public void JoinGroup()
         {

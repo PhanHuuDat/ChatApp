@@ -79,12 +79,7 @@ namespace ChatApp.Services
                 return GroupStatus.GroupExited;
             } else
             {
-                Group group = new PublicGroup()
-                {
-                    Name = groupName,
-                    MemberList = members,
-                    IsPrivate = false,
-                };
+                Group group = new PublicGroup(groupName, members, false);
                 GenerateUniqueInviteCode((PublicGroup)group);
                 dataStorage.Groups.Add(group);
                 return GroupStatus.GroupCreated;
@@ -147,13 +142,7 @@ namespace ChatApp.Services
                 return GroupStatus.GroupExited;
             } else
             {
-                Group group = new PrivateGroup()
-                {
-                    Name = groupName,
-                    Admin = admin,
-                    MemberList = members,
-                    IsPrivate = true,
-                };
+                Group group = new PrivateGroup(admin, groupName, members, true);
                 dataStorage.Groups.Add(group);
                 return GroupStatus.GroupCreated;
             }
