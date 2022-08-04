@@ -4,7 +4,5 @@
     {
         LoginFail,
         LoginSuccess,
-        WrongPassword,
-        WrongUsername
     }
 }

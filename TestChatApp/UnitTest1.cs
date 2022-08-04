@@ -27,9 +27,9 @@ namespace ChatAppTest
         [Test]
         public void RegisterUser()
         {
-            int length = userService.GetAll();
+            int length = userService.Count();
             userService.RegisterUser("test5", "1234567890");
-            int nextLength = userService.GetAll();
+            int nextLength = userService.Count();
             Assert.That(length, Is.EqualTo(nextLength - 1));
         }
 
