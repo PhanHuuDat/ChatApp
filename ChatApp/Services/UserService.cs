@@ -6,7 +6,12 @@ namespace ChatApp.Services
 {
     public class UserService
     {
-        private readonly DataStorage dataStorage = DataStorage.GetDataStorage();
+        private readonly DataStorage dataStorage;
+
+        public UserService(DataStorage dataStorage)
+        {
+            this.dataStorage = dataStorage;
+        }
 
         #region user-crud
         public List<User>? FindFriend(User user, string name)
@@ -67,6 +72,7 @@ namespace ChatApp.Services
         {
             return dataStorage.Users.GetAll().Count();
         }
+
         public User GetUser(string userId)
         {
             var user = dataStorage.Users.GetFirstOrDefault(u => u.Id == userId);

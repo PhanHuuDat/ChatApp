@@ -8,6 +8,7 @@ namespace ChatApp.Models
 
         public PublicGroup(string name, IList<User> memberList, bool isPrivate) : base(name, memberList, isPrivate)
         {
+            GenerateInviteCode();
         }
 
         public string InviteCode

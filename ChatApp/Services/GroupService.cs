@@ -7,8 +7,12 @@ namespace ChatApp.Services
 {
     public class GroupService
     {
-        private readonly DataStorage dataStorage = DataStorage.GetDataStorage();
-        private UserService userService = new UserService();
+        private readonly DataStorage dataStorage;
+
+        public GroupService(DataStorage dataStorage)
+        {
+            this.dataStorage = dataStorage;
+        }
 
         #region general
 
@@ -72,13 +76,15 @@ namespace ChatApp.Services
 
         #region public group 
 
-        public GroupStatus CreatePublicGroup(string groupName, List<User> members)
+        public GroupStatus CreatePublicGroup(User creator, string groupName)
         {
-            if (ValidateGroupNameExistance(groupName))
+            if (ValidateGroupNameExistance(groupName, creator.Id))
             {
                 return GroupStatus.GroupExited;
             } else
             {
+                IList<User> members = new List<User>();
+                members.Add(creator);
                 Group group = new PublicGroup(groupName, members, false);
                 GenerateUniqueInviteCode((PublicGroup)group);
                 dataStorage.Groups.Add(group);
@@ -135,14 +141,16 @@ namespace ChatApp.Services
 
         #region private group
 
-        public GroupStatus CreatePrivateGroup(string groupName, User admin, List<User> members)
+        public GroupStatus CreatePrivateGroup(User creator, string groupName)
         {
-            if (ValidateGroupNameExistance(groupName))
+            if (ValidateGroupNameExistance(groupName, creator.Id))
             {
                 return GroupStatus.GroupExited;
             } else
             {
-                Group group = new PrivateGroup(admin, groupName, members, true);
+                IList<User> members = new List<User>();
+                members.Add(creator);
+                Group group = new PrivateGroup(creator, groupName, members, true);
                 dataStorage.Groups.Add(group);
                 return GroupStatus.GroupCreated;
             }
@@ -175,7 +183,7 @@ namespace ChatApp.Services
 
         #region ultilities
 
-        private bool ValidateGroupNameExistance(string name)
+        private bool ValidateGroupNameExistance(string name, string userId)
         {
             var group = dataStorage.Groups.GetFirstOrDefault(group => group.Name.Equals(name));
             if (group == null)
@@ -183,7 +191,15 @@ namespace ChatApp.Services
                 return false;
             } else
             {
-                return true;
+                //validate if user is in group
+                foreach (var member in group.MemberList)
+                {
+                    if (member.Id.Equals(userId))
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
         
