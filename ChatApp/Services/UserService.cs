@@ -90,6 +90,19 @@ namespace ChatApp.Services
             return false;
         }
 
+        public Alias GetAlias(User assignor, User assignee)
+        {
+            if (assignor != null && assignee != null)
+            {
+                Alias alias = dataStorage.Aliases
+                    .GetFirstOrDefault(alias => alias.AssignorID.Equals(assignor.Id)
+                    && alias.AssigneeID.Equals(assignee.Id)
+                    );
+                return alias;
+            }
+            return null;
+        }
+
         #endregion
 
     }
