@@ -26,7 +26,7 @@ namespace ChatApp.Models
             this.id = Guid.NewGuid().ToString("N");
             this.username = username;
             this.salt = GenerateRandomSalt();
-            this.password = HashPassword(password);
+            this.password = HashPassword(password, salt);
         }
 
         #region properties
