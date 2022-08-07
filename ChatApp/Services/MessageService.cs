@@ -8,7 +8,7 @@ namespace ChatApp.Services
     public class MessageService
     {
         private readonly DataStorage dataStorage = DataStorage.GetDataStorage();
-       
+
 
 
         #region input
@@ -16,7 +16,7 @@ namespace ChatApp.Services
         {
             if (content != null)
             {
-                Message message = new Message(content, filePath, DateTime.Now, uid, groupId, fileType);
+                Message message = new Message(content,filePath,uid,groupId);
                 dataStorage.Messages.Add(message);
                 return true;
             }
@@ -59,7 +59,7 @@ namespace ChatApp.Services
             return messagesList;
         }
 
-        public List<Message> GetMessages(int Userid, int groupId, string keyword)
+        public List<Message> GetMessages(string Userid, string groupId, string keyword)
         {
             List<Message> messagesList;
             messagesList = dataStorage.Messages.GetAll(
@@ -74,7 +74,7 @@ namespace ChatApp.Services
         #endregion
 
         #region file
-        public List<string>? DisplayAllFile(int groupId)
+        public List<string>? DisplayAllFile(string groupId)
         {
             List<Message>? messageList = dataStorage.Messages.GetAll(mess => mess.Path != null && mess.InGroupId.Equals(groupId)).ToList();
             List<string>? filePathList = null;
@@ -93,26 +93,21 @@ namespace ChatApp.Services
                 System.IO.File.Delete(oldImage);
             }
         }
-        public void UploadNewFile(string userId, string groupId, string webRootPath, IFormFileCollection? files)
+
+        public void UploadNewFile(string userId, string groupId, string webRootPath, IFormFileCollection? files, FileType? fileType)
         {
             string fileName_new = Guid.NewGuid().ToString();
-            var uploads = Path.Combine(webRootPath, @"images\menuItems");
+            var uploads = Path.Combine(webRootPath, @"images");
             var extension = Path.GetExtension(files[0].FileName);
 
             using (var fileStream = new FileStream(Path.Combine(uploads, fileName_new + extension), FileMode.Create))
             {
                 files[0].CopyTo(fileStream);
             }
-            //Message message = new Message(null, @"\images\menuItems\" + fileName_new + extension,
-            //                            DateTime.Now, userId, groupId, files.GetType());
-            //{
-            //    Id = GenerateMessageId(),
-            //    Path = ,
-            //    InGroupId = groupId,
-            //    FromUserId = userId,
-            //    CreatedDate = DateTime.Now,
-            //};
-            //dataStorage.Messages.Add(message);
+            var path = @"\images\" + fileName_new + extension;
+            Message message = new Message(string.Empty, path, groupId, userId, fileType);
+
+            dataStorage.Messages.Add(message);
         }
         #endregion
     }
