@@ -25,7 +25,7 @@ namespace ChatAppTest
         [Test]
         [TestCase("test1", "123456", RegisterStatus.RegisterSuccess)]
         [TestCase("test2", "123456", RegisterStatus.RegisterFail)]
-        public void RegisterUser(string username, string password, RegisterStatus expectation)
+        public void TestRegisterUser(string username, string password, RegisterStatus expectation)
         {
             User user = dataStorage.Users.GetFirstOrDefault(user => user.UserName == username);
             Assert.That(userService.RegisterUser(username, password), Is.EqualTo(expectation));
@@ -35,7 +35,7 @@ namespace ChatAppTest
         [TestCase("test1", "123456", LoginStatus.LoginSuccess)]
         [TestCase("test2", "123456", LoginStatus.LoginFail)]
         [TestCase("test5", "123456", LoginStatus.LoginFail)]
-        public void Login(string username, string password, LoginStatus result)
+        public void TestLogin(string username, string password, LoginStatus result)
         {
             LoginStatus status = userService.LoginByUsername(username, password);
             Assert.That(status, Is.EqualTo(result));
@@ -44,14 +44,14 @@ namespace ChatAppTest
         [TestCase("A1", "B2", 1)]
         [TestCase("B1", "B2", 2)]
         [TestCase("C1", "C2", 2)]
-        public void FindFriend(string userId, string friendId, int totalFriends)
+        public void TestFindFriend(string userId, string friendId, int totalFriends)
         {
             userService.AddFriend(userId, friendId);
             int friends = userService.GetUser(userId).FriendList.Count;
             Assert.That(friends, Is.EqualTo(totalFriends));
         }
         [Test]
-        public void SetAlias()
+        public void TestSetAlias()
         {
             User user1 = userService.GetUser("A1");
             User user2 = userService.GetUser("A2");

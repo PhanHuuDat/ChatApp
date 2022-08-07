@@ -27,7 +27,7 @@ namespace ChatAppTest
             };
         }
         [Test]
-        public void SendTextMessage()
+        public void TestSendTextMessage()
         {
             bool result = messageService.SendMessage("A1", "G1", "hello");
             Assert.That(result, Is.True);
@@ -39,7 +39,7 @@ namespace ChatAppTest
             Assert.That(result, Is.True);
         }*/
         [Test]
-        public void DeleteMessage()
+        public void TestDeleteMessage()
         {
             for (int i = 0; i < 2; i++)
             {
@@ -58,7 +58,7 @@ namespace ChatAppTest
             Assert.Equals(2, fileList);
         }*/
         [Test]
-        public void ShowKLatestMessageGroup()
+        public void TestShowKLatestMessageGroup()
         {
             for (int i = 0; i < 2; i++)
             {
@@ -71,7 +71,7 @@ namespace ChatAppTest
         [TestCase("A1", "G1", "hello")]
         [TestCase("A1", "G1", "hello")]
         [TestCase("A2", "G2", "hello")]
-        public void FindMessageByKeywordInUser(string Userid, string groupId, string keyword)
+        public void TestFindMessageByKeywordInUser(string Userid, string groupId, string keyword)
         {
             for (int i = 0; i < 4; i++)
             {
@@ -91,7 +91,7 @@ namespace ChatAppTest
         [Test]
         [TestCase("User1")]
         [TestCase("User2")]
-        public void ShowAllConversationsInGroup(string userName)
+        public void TestShowAllConversationsInGroup(string userName)
         {
             User user = dataStorage.Users.GetFirstOrDefault(user => user.UserName.Equals(userName));
             for (int i = 0; i < 1; i++)
@@ -104,7 +104,7 @@ namespace ChatAppTest
         [Test]
         [TestCase("User1")]
         [TestCase("User2")]
-        public void ShowAllConversationUser(string userName)
+        public void TestShowAllConversationUser(string userName)
         {
             User user = dataStorage.Users.GetFirstOrDefault(user => user.UserName.Equals(userName));
             Assert.That(messageService.GetConversations(user),Is.True);
