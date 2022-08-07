@@ -46,7 +46,7 @@ namespace ChatApp.Services
 
             return conversations;
         }
-
+            
         public List<Message> GetTopLatestMessages(int groupId, int amount)
         {
             List<Message> messagesList;
